@@ -7,11 +7,10 @@ require("dotenv").config()
 const domain = process.env.MAILGUN_DOMAIN
 const key = process.env.MAILGUN_KEY
 
-
-function sendEmail(subject,text) {
+function sendEmail(subject,text,recipient) {
     const url = `https://api.mailgun.net/v3/${domain}/messages`;
     const data = {
-        to: "deanzacoursenotifier@gmail.com",
+        to: recipient,
         from: `mailgun@${domain}`,
         subject: subject,
         text: text
@@ -30,10 +29,7 @@ function sendEmail(subject,text) {
     fetch(url, options).then(res => { console.log(res); return res.text() }).then(text=>console.log(`mailgun response: ${text}`))
 }
 
-
-const dept = "CIS"
-const term = "W2021"//winter 2021
-const courseName = "Data Abstraction and Structures"
+const recipient = "deanzacoursenotifier@gmail.com"
 
 function checkStatus(dept, term, courseName,doSendEmail) {
     const statuses = Buffer.from(fs.readFileSync("statuses.txt")).toString().split("\n").reduce((accumulator, line) => {
@@ -58,12 +54,16 @@ function checkStatus(dept, term, courseName,doSendEmail) {
             console.log(message)
             fs.writeFileSync("statuses.txt", newStatuses)
             if(doSendEmail) {
-                sendEmail("Course Status Notification",message)
+                sendEmail("Course Status Notification",message,recipient)
             }
         } else {
             console.log("no changes")
         }
     })
 }
+
+const dept = "CIS"
+const term = "W2021"//winter 2021
+const courseName = "Data Abstraction and Structures"
 
 checkStatus(dept,term,courseName,true);
