@@ -2,7 +2,8 @@ const fetch = require("node-fetch")
 const fs = require('fs');
 const FormData = require("form-data")
 
-require("dotenv").config()
+if(!process.env.MAILGUN_DOMAIN)
+    require("dotenv").config()
 
 const domain = process.env.MAILGUN_DOMAIN
 const key = process.env.MAILGUN_KEY
@@ -54,7 +55,7 @@ function checkStatus(dept, term, courseName,doSendEmail) {
             console.log(message)
             fs.writeFileSync("statuses.txt", newStatuses)
             if(doSendEmail) {
-                sendEmail("Course Status Notification",message,recipient)
+                sendEmail(`${courseName} Status Change`,message,recipient)
             }
         } else {
             console.log("no changes")
