@@ -34,6 +34,7 @@ const recipient = "deanzacoursenotifier@gmail.com"
 
 //Values for emailOption: 
 //"onpositive" only sends the email if there is a positive change, like going from Full to WL or WL to Open.
+//"onopen" only sends the email if a course has changed to open
 //"always" sends the email for all changes
 //"never" never sends the email(or you can put any other string and it will also not send)
 function checkStatus(dept, term, courseName, emailOption) {
@@ -44,7 +45,7 @@ function checkStatus(dept, term, courseName, emailOption) {
         return accumulator
     }, {})
     fetch(`https://www.deanza.edu/schedule/listings.html?dept=${dept}&t=${term}`).then(res => res.text()).then(text => {
-        const matches = text.matchAll(new RegExp(`(\\d{5}).*(\\d\\d\\w).*label-seats">(.*)<\\/span>.*${courseName}.*">(.*)<\\/a><`, "g"));
+        const matches = text.matchAll(new RegExp(`(\\d{5}).*(\\d\\d\\w).*label-seats">(.*)<\\/span>.*${courseName.replace("(","\\(").replace(")","\\)")}.*">(.*)<\\/a><`, "g"));
         const changes = []
         /*
         Example match:
@@ -68,14 +69,17 @@ function checkStatus(dept, term, courseName, emailOption) {
         }
         if (changes.length > 0) {
             let positiveChanges = false
+            let openings=false
             changes.forEach(change => {
                 if (statusValues[change[3]] > statusValues[change[1]])
                     positiveChanges = true
+                if(change[3]=="Open")
+                    openings=true
             });
             const message = changes.reduce((prev, curr) => `${prev}${curr[0]} (${curr[2]}) with ${curr[4]} changed from ${curr[1]} to ${curr[3]}.\n`, "")
             console.log(message)
             fs.writeFileSync("statuses.txt", newStatuses)
-            if (emailOption == "always" || (emailOption == "onpositive" && positiveChanges)) {
+            if (emailOption == "always" || (emailOption == "onpositive" && positiveChanges) || (emailOption=="onopen"&&openings)) {
                 sendEmail(`${courseName} Status Change`, message, recipient)
             } else {
                 console.log("did not send email")
@@ -91,4 +95,4 @@ const term = "W2021"//winter 2021
 const courseName = "Data Abstraction and Structures"
 
 
-checkStatus(dept, term, courseName, "always");
+checkStatus(dept, term, courseName, "onpositive");
