@@ -85,7 +85,7 @@ function checkStatus(dept, term, courseName, emailOption) {
                 console.log("did not send email")
             }
         } else {
-            console.log("no changes")
+            console.log(`no changes at ${new Date()}`)
         }
     })
 }
@@ -95,4 +95,4 @@ const term = "W2021"//winter 2021
 const courseName = "Data Abstraction and Structures"
 
 
-checkStatus(dept, term, courseName, "onpositive");
+checkStatus(dept, term, courseName, "always");
