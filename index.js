@@ -2,6 +2,17 @@ const fetch = require("node-fetch")
 const fs = require('fs');
 const FormData = require("form-data")
 
+
+const dept = "CIS"//The prefix for the department the course is in
+const term = "W2021"//first letter of the quarter followed by the year. For example, Winter 2021 would be W2021
+const courseName = "Data Abstraction and Structures"//the name of the course as it appears on the schedule page
+const recipient = "deanzacoursenotifier@gmail.com"//set this to your own email
+const emailOption = "onopen"//Values for emailOption: 
+//"onpositive" only sends the email if there is a positive change, like going from Full to WL or WL to Open.
+//"onopen" only sends the email if a course has changed to open
+//"always" sends the email for all changes
+//"never" never sends the email(or you can put any other string and it will also not send)
+
 if (!process.env.MAILGUN_DOMAIN)
     require("dotenv").config()
 
@@ -30,7 +41,6 @@ function sendEmail(subject, text, recipient) {
     fetch(url, options).then(res => res.text()).then(text => console.log(`mailgun response: ${text}`))
 }
 
-const recipient = "deanzacoursenotifier@gmail.com"
 
 //Values for emailOption: 
 //"onpositive" only sends the email if there is a positive change, like going from Full to WL or WL to Open.
@@ -90,9 +100,4 @@ function checkStatus(dept, term, courseName, emailOption) {
     })
 }
 
-const dept = "CIS"
-const term = "W2021"//winter 2021
-const courseName = "Data Abstraction and Structures"
-
-
-checkStatus(dept, term, courseName, "onpositive");
+checkStatus(dept, term, courseName, emailOption);
