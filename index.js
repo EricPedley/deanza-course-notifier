@@ -6,12 +6,14 @@ const nodemailer = require("nodemailer")
 const dept = "CIS"//The prefix for the department the course is in
 const term = "W2021"//first letter of the quarter followed by the year. For example, Winter 2021 would be W2021
 const courseName = "Data Abstraction and Structures"//the name of the course as it appears on the schedule page
-const recipient = "deanzacoursenotifier@gmail.com"//set this to your own email
+const recipient = "example_address@yahoo.com"//set this to your own email. can be any email provider.
 const emailOption = "onopen"//Values for emailOption: 
 //"onpositive" only sends the email if there is a positive change, like going from Full to WL or WL to Open.
 //"onopen" only sends the email if a course has changed to open
 //"always" sends the email for all changes
 //"never" never sends the email(or you can put any other string and it will also not send)
+const host = "smtp.gmail.com"//if you aren't using gmail to send the email you need to change this
+const port = 587//this might be different for different smtp servers. for gmail it's 587
 
 if (!process.env.EMAIL_USER)
     require("dotenv").config()
@@ -20,8 +22,8 @@ const user = process.env.EMAIL_USER
 const pass = process.env.EMAIL_PASS
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,//this might be different for different smtp servers. for gmail it's 587
+    host: host,
+    port: port,
     auth: {
         user: user,
         pass: pass
