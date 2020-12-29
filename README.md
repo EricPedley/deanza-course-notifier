@@ -18,5 +18,3 @@ Checks De Anza College course listings page and detects status changes for cours
 4. Open index.js in your text editor and change the constants "recipient", "dept", "term", and "courseName" to your preferences. If you aren't using gmail, you will have to change the "host" and "port" constants to match your email provider's SMTP server.
 5. Run index.js with command "node index.js"
 6. You can set the script up to run automatically using cron jobs on Mac or Linux, or using task scheduler on Windows
-
-- If you find this project helpful, give the repo a star and I'll make a Youtube tutorial if it gets enough attention
