@@ -1,6 +1,7 @@
-# deanza-course-notifier
+# De Anza Course Opening Notifier
 
-Checks De Anza College course listings page and detects status changes for courses
+## Description
+  Checks De Anza College course listings page and detects status changes for courses, then sends email notifications.
 
 ## Setup
 
